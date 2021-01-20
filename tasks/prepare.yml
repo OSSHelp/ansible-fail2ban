@@ -1,0 +1,45 @@
+---
+
+- name: create test dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+  when: fail2ban_role_test_mode is defined
+  with_items:
+    - /var/log/nginx
+    - /tmp/web-prod.log
+    - /tmp/backend-prod.log
+
+- name: create test log files
+  template:
+    src: testfile.j2
+    dest: "{{ item }}"
+  when: fail2ban_role_test_mode is defined
+  with_items:
+    - /var/log/nginx/test-error.log
+
+- name: ensure syslog group is present
+  group:
+    name: syslog
+    system: true
+    state: present
+
+- name: ensure syslog user is present
+  user:
+    name: syslog
+    group: syslog
+    groups: adm
+    home: /home/syslog
+    create_home: no
+    shell: "{{ '/usr/sbin/nologin' if ansible_distribution_release == 'bionic' else '/bin/false' }}"
+    system: true
+    state: present
+
+- name: prepare auth.log
+  copy:
+    content: ""
+    dest: /var/log/auth.log
+    force: false
+    group: adm
+    owner: syslog
+    mode: 0640

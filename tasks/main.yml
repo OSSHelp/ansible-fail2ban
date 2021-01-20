@@ -1,0 +1,8 @@
+---
+
+- include_tasks: prepare.yml
+
+- include_tasks: install.yml
+  when: fail2ban_setup == "full"
+
+- include_tasks: configure.yml

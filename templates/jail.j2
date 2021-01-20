@@ -1,0 +1,53 @@
+[DEFAULT]
+
+bantime    = {{ fail2ban_defaults.bantime | default('7200', true) }}
+findtime   = {{ fail2ban_defaults.findtime | default('600', true) }}
+maxretry   = {{ fail2ban_defaults.maxretry | default('3', true) }}
+{% if fail2ban_alerts.enabled %}
+sendername = {{ fail2ban_alerts.from }}
+destemail  = {{ fail2ban_alerts.email }}
+action     = %(action_mwl)s
+{% endif %}
+
+ignoreip   = 127.0.0.1/8{% for ip in fail2ban_ignores_ips %} {{ ip }}{% endfor %}
+
+{% if fail2ban_enable_ignorecommand %}
+ignorecommand = /usr/local/sbin/custom.fail2ban-check-ip <ip>
+{% endif %}
+
+{% if 'openssh-server' in ansible_facts.packages %}
+
+[sshd]
+enabled    = {{ fail2ban_sshd.enabled | default('true', true) }}
+ports      = {{ fail2ban_sshd.ports | default('22', true) }}
+maxretry   = {{ fail2ban_sshd.maxretry | default(fail2ban_defaults.maxretry, true) }}
+bantime    = {{ fail2ban_sshd.bantime | default(fail2ban_defaults.bantime, true) }}
+findtime   = {{ fail2ban_sshd.findtime | default('1800', true) }}
+{% endif %}
+{% if fail2ban_containers is defined and fail2ban_containers|length %}
+{% for container in fail2ban_containers %}
+
+[sshd-lxc-{{ container.name }}]
+enabled    = {{ container.enabled | default('true', true) }}
+logpath    = {{ container.logpath | mandatory }}
+filter     = {{ container.filter | default('sshd', true) }}
+port       = {{ container.port | default('22', true) }}
+backend    = {{ container.backend | default('polling', true) }}
+chain      = {{ container.chain | default('FORWARD', true) }}
+banaction  = {{ container.banaction | default('iptables-multiport', true) }}
+bantime    = {{ container.bantime | default('10000', true) }}
+maxretry   = {{ container.maxretry | default('3', true) }}
+{% endfor %}
+{% endif %}
+{% if fail2ban_services is defined and fail2ban_services|length %}
+{% for service in fail2ban_services %}
+
+[{{ service.name }}]
+enabled = {{ service.enabled | default('true') }}
+{% for key, value in service.items()|sort() %}
+{% if key != 'name' %}
+{{ key }} = {{ value }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+check_ip_lists=({% for list in fail2ban_default_ipset_lists %} {{ list }} {% endfor %}{% for list in fail2ban_custom_ipset_lists %} {{ list }} {% endfor %})

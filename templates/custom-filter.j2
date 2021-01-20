@@ -1,0 +1,31 @@
+[Definition]
+
+{% for key, value in item.items() %}
+{% if key != 'name' and key == 'failregex' %}
+failregex = {% for item in value %}
+{% if item == value|first %}
+{{ item }}
+{% else %}
+{{ item|indent(12, True) }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% for key, value in item.items() %}
+{% if key != 'name' and key == 'ignoreregex' %}
+ignoreregex = {% for item in value %}
+{% if item == value|first %}
+{{ item }}
+{% else %}
+{{ item|indent(14, True) }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% for key, value in item.items() %}
+{% if key != 'name' and key != 'failregex' and key != 'ignoreregex' %}
+{{ key }} = {{ value }}
+{% endif %}
+{% endfor %}

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+target_ip=$1
+check_ip_config='/usr/local/etc/scripts/custom.fail2ban-check-ip.conf'
+
+test -s "${check_ip_config}" && . "${check_ip_config}"
+function check_ip_in_ipset() {
+  for list in "${check_ip_lists[@]}"; do
+    /sbin/ipset save "${list}" | grep -qE "${target_ip}" && return 0
+  done
+  return 1
+}
+
+check_ip_in_ipset

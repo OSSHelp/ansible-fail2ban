@@ -1,0 +1,56 @@
+---
+
+- name: create jail.local
+  template:
+    src: jail.j2
+    dest: /etc/fail2ban/jail.local
+    mode: 0644
+  notify: fail2ban restart
+
+- name: create iptables-multiport-fw.conf
+  template:
+    src: action_iptables-multiport-fw.j2
+    dest: /etc/fail2ban/action.d/iptables-multiport-fw.conf
+    mode: 0644
+  notify: fail2ban restart
+
+- name: deploy custom filters
+  template:
+    src: custom-filter.j2
+    dest: "/etc/fail2ban/filter.d/{{ item.name }}.conf"
+  with_items: "{{ fail2ban_filters }}"
+  when: fail2ban_filters is defined
+  notify: fail2ban restart
+
+- name: adjust blocktype in iptables-common.conf
+  replace:
+    path: /etc/fail2ban/action.d/iptables-common.conf
+    regexp: '^blocktype =.+'
+    replace: "blocktype = {{ fail2ban_blocktype }}"
+  notify: fail2ban restart
+
+- name: create scripts directory
+  file:
+    dest: /usr/local/etc/scripts
+    state: directory
+  when: fail2ban_enable_ignorecommand
+
+- name: create custom.fail2ban-check-ip.conf
+  template:
+    src: check-ip_conf.j2
+    dest: /usr/local/etc/scripts/custom.fail2ban-check-ip.conf
+    mode: 0644
+  when: fail2ban_enable_ignorecommand
+
+- name: create custom.fail2ban-check-ip
+  template:
+    src: fail2ban-check-ip.j2
+    dest: /usr/local/sbin/custom.fail2ban-check-ip
+    mode: 0744
+  when: fail2ban_enable_ignorecommand
+
+- name: ensure fail2ban service is enabled and started
+  service:
+    name: fail2ban
+    enabled: true
+    state: started

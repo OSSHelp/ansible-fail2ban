@@ -1,0 +1,13 @@
+---
+
+fail2ban_setup: full
+fail2ban_defaults: { bantime: 7200, findtime: 600, maxretry: 3 }
+fail2ban_ignores_ips: []
+fail2ban_services: []
+fail2ban_alerts: { email: '', enabled: false, from: '' }
+
+fail2ban_installation_type: repository
+fail2ban_blocktype: DROP
+fail2ban_default_ipset_lists: [oss-v4, oss-v6]
+fail2ban_custom_ipset_lists: []
+fail2ban_enable_ignorecommand: false

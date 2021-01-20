@@ -1,0 +1,33 @@
+---
+
+- name: add osshelp testing repository
+  block:
+    - name: install dependences
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+        update_cache: true
+        cache_valid_time: 86400
+
+    - name: add an apt key
+      apt_key:
+        url: https://pkgs.osshelp.ru/public.key
+
+    - name: add osshelp testing repo for xenial
+      apt_repository:
+        repo: deb https://pkgs.osshelp.ru/ubuntu/ xenial-testing main restricted universe multiverse
+        filename: osshelp-testing
+  when:
+    - ansible_distribution_release == "xenial"
+    - fail2ban_installation_type == "osshelp"
+
+- name: install fail2ban
+  apt:
+    name: fail2ban
+    update_cache: true
+
+- name: gather installed packages
+  package_facts:
+    manager: apt
