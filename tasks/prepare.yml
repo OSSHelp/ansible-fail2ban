@@ -7,8 +7,6 @@
   when: fail2ban_role_test_mode is defined
   with_items:
     - /var/log/nginx
-    - /tmp/web-prod.log
-    - /tmp/backend-prod.log
 
 - name: create test log files
   template:
@@ -17,6 +15,8 @@
   when: fail2ban_role_test_mode is defined
   with_items:
     - /var/log/nginx/test-error.log
+    - /tmp/web-prod.log
+    - /tmp/backend-prod.log
 
 - name: ensure syslog group is present
   group:
