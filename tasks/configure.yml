@@ -28,6 +28,7 @@
     regexp: '^blocktype =.+'
     replace: "blocktype = {{ fail2ban_blocktype }}"
   notify: fail2ban restart
+  when: not ansible_check_mode
 
 - name: create scripts directory
   file:
@@ -40,7 +41,7 @@
     src: check-ip_conf.j2
     dest: /usr/local/etc/scripts/custom.fail2ban-check-ip.conf
     mode: 0644
-  when: fail2ban_enable_ignorecommand
+  when: fail2ban_enable_ignorecommand and not ansible_check_mode
 
 - name: create custom.fail2ban-check-ip
   template:
