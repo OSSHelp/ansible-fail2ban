@@ -11,3 +11,5 @@ fail2ban_blocktype: DROP
 fail2ban_default_ipset_lists: [oss-v4, oss-v6]
 fail2ban_custom_ipset_lists: []
 fail2ban_enable_ignorecommand: false
+fail2ban_dummy_logs: false
+fail2ban_dummy_log_path: /var/log/fail2ban-dummy.log

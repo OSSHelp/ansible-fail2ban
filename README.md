@@ -82,6 +82,8 @@ roles:
 | `fail2ban_enable_ignorecommand` | `false` | enables ignorecommand options in jail.local and checking script generation |
 | `fail2ban_default_ipset_lists` | `[oss-v4, oss-v6]` | describes the default ipset lists for checking script |
 | `fail2ban_custom_ipset_lists` | `[]` | describes the custom ipset lists for checking script |
+| `fail2ban_dummy_logs` | `false` | Whether to create dummy logs to avoid service failing to start due to absence of any jail logs. |
+| `fail2ban_dummy_log_path` | `/var/log/fail2ban-dummy.log` | Path to dummy log (will be automatically created). |
 
 ### Jail generation
 

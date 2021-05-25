@@ -1,5 +1,22 @@
 ---
 
+- name: prepare systemd override
+  block:
+    - name: create fail2ban.service.d directory
+      file:
+        path: /etc/systemd/system/fail2ban.service.d
+        state: directory
+        mode: '0755'
+
+    - name: create fail2ban.service override
+      template:
+        src: systemd-override.j2
+        dest: /etc/systemd/system/fail2ban.service.d/override.conf
+      notify:
+        - reload fail2ban unit
+        - fail2ban restart
+  when: fail2ban_dummy_logs
+
 - name: create jail.local
   template:
     src: jail.j2

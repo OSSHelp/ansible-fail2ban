@@ -30,6 +30,9 @@ findtime   = {{ fail2ban_sshd.findtime | default('1800', true) }}
 [sshd-lxc-{{ container.name }}]
 enabled    = {{ container.enabled | default('true', true) }}
 logpath    = {{ container.logpath | mandatory }}
+{% if fail2ban_dummy_logs %}
+{{ fail2ban_dummy_log_path|indent(13, True) }}
+{% endif %}
 filter     = {{ container.filter | default('sshd', true) }}
 port       = {{ container.port | default('22', true) }}
 backend    = {{ container.backend | default('polling', true) }}
@@ -46,7 +49,12 @@ maxretry   = {{ container.maxretry | default('3', true) }}
 enabled = {{ service.enabled | default('true') }}
 {% for key, value in service.items()|sort() %}
 {% if key != 'name' %}
+{% if key == 'logpath' and fail2ban_dummy_logs %}
 {{ key }} = {{ value }}
+{{ fail2ban_dummy_log_path|indent(10, True) }}
+{% else %}
+{{ key }} = {{ value }}
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endfor %}
