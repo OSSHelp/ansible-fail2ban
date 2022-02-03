@@ -67,6 +67,13 @@
     mode: 0744
   when: fail2ban_enable_ignorecommand
 
+- name: adjust ignoreregex in recidive filter
+  lineinfile:
+    path: /etc/fail2ban/filter.d/recidive.conf
+    regexp: '^ignoreregex'
+    line: "ignoreregex = .*\\[({{ fail2ban_recidive_ignore_jails | join('|') }})\\].*"
+  when: not ansible_check_mode and fail2ban_recidive_ignore_jails | length > 0
+
 - name: ensure fail2ban service is enabled and started
   service:
     name: fail2ban

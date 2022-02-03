@@ -13,3 +13,4 @@ fail2ban_custom_ipset_lists: []
 fail2ban_enable_ignorecommand: false
 fail2ban_dummy_logs: false
 fail2ban_dummy_log_path: /var/log/fail2ban-dummy.log
+fail2ban_recidive_ignore_jails: []

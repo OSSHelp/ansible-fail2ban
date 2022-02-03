@@ -16,6 +16,7 @@ roles:
       fail2ban_ignores_ips: ['10.0.0.0/8']
       fail2ban_enable_ignorecommand: true
       fail2ban_custom_ipset_lists: [oss-v4-main, oss-v6-main]
+      fail2ban_recidive_ignore_jails: [some-jail, another-jail]
       fail2ban_filters: [
         { name: nginx-req-limits,
           failregex: [ '^\s*\[error\] \d+#\d+: \*\d+ limiting requests, excess: [\d\.]+ by zone "[^"]+", client: <HOST>' ],
@@ -84,6 +85,7 @@ roles:
 | `fail2ban_custom_ipset_lists` | `[]` | describes the custom ipset lists for checking script |
 | `fail2ban_dummy_logs` | `false` | Whether to create dummy logs to avoid service failing to start due to absence of any jail logs. |
 | `fail2ban_dummy_log_path` | `/var/log/fail2ban-dummy.log` | Path to dummy log (will be automatically created). |
+| `fail2ban_recidive_ignore_jails` | `[]` | List of jails that need to be ignored by recidive jail. |
 
 ### Jail generation
 
