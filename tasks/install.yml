@@ -13,11 +13,11 @@
 
     - name: add an apt key
       apt_key:
-        url: https://pkgs.osshelp.ru/public.key
+        url: https://pkgs.osshelp.io/public.key
 
     - name: add osshelp testing repo for xenial
       apt_repository:
-        repo: deb https://pkgs.osshelp.ru/ubuntu/ xenial-testing main restricted universe multiverse
+        repo: deb https://pkgs.osshelp.io/ubuntu/ xenial-testing main restricted universe multiverse
         filename: osshelp-testing
   when:
     - ansible_distribution_release == "xenial"
