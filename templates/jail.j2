@@ -36,6 +36,7 @@
 {{ "%-10s = %s"|format('banaction', container.banaction | default('iptables-multiport', true)) }}
 {{ "%-10s = %s"|format('bantime', container.bantime | default('10000', true)) }}
 {{ "%-10s = %s"|format('maxretry', container.maxretry | default('3', true)) }}
+{{ "%-10s = %s"|format('findtime', container.findtime | default('1800', true)) }}
 {% endfor %}
 {% endif %}
 {% if fail2ban_services is defined and fail2ban_services|length %}
