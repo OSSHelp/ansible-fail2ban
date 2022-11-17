@@ -43,7 +43,9 @@
 {% for service in fail2ban_services %}
 
 [{{ service.name }}]
-{{ "%-10s = %s"|format('enabled', service.enabled | default('true')) }}
+{% if not service.enabled is defined %}
+{{ "%-10s = %s"|format("enabled", "True") }}
+{% endif %}
 {% for key, value in service.items()|sort() %}
 {% if key != 'name' %}
 {% if key == 'logpath' and fail2ban_dummy_logs %}
